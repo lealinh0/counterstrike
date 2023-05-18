@@ -1,24 +1,34 @@
-function leerXML(url, callback) {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        callback(xmlhttp.responseXML);
-      }
-    };
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
-  }
-leerXML("./proyecto.xml", function(xml) {
-    // Aquí puedes acceder y manipular el objeto `xml` que contiene la estructura del XML
-    // Por ejemplo, puedes obtener elementos por su etiqueta usando los métodos proporcionados por la API XML
-    var elementos = xml.getElementsByTagName("elemento");
-  
-    // Itera sobre los elementos y muestra su contenido
-    for (var i = 0; i < elementos.length; i++) {
-      var elemento = elementos[i];
-      var texto = elemento.textContent;
-      console.log(texto);
+const fs = require('fs');
+
+function leerArchivoXML(archivo) {
+  fs.readFile(archivo, 'utf-8', (err, data) => {
+    if (err) {
+      console.error('Error al leer el archivo:', err);
+      return;
+    }
+
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(data, 'text/xml');
+
+    const usuarios = xmlDoc.getElementsByTagName('usuario');
+    
+    for (let i = 0; i < usuarios.length; i++) {
+      const usuario = usuarios[i];
+      const nombre = usuario.getAttribute('nombre');
+      const steamId = usuario.getAttribute('steam_id');
+      const estadisticas = usuario.getElementsByTagName('estadisticas')[0].attributes;
+      const rango = usuario.getElementsByTagName('rango')[0].attributes;
+      const armas = usuario.getElementsByTagName('arma');
+
+      console.log('Nombre:', nombre);
+      console.log('Steam ID:', steamId);
+      console.log('Estadísticas:', estadisticas);
+      console.log('Rango:', rango);
+      console.log('Armas:', armas);
+      console.log('-----------------------------');
     }
   });
+}
 
-
+// Uso de la función
+leerArchivoXML('../proyecto.xml');

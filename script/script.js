@@ -30,13 +30,17 @@ function ejecutar(){
         console.log(`Asesinatos: ${asesinatos}`);
         console.log(`Muertes: ${muertes}`);
 
-        alert("Información del jugador:"
-        `Nombre: ${nombre}`
-        `Partidas jugadas: ${partidasJugadas}`
-        `Partidas ganadas: ${partidasGanadas}`
-        `Asesinatos: ${asesinatos}`
-        `Muertes: ${muertes}`
-        );
+
+        var mensaje =
+          "Información del jugador:\n" +
+          "Nombre: " + nombre + "\n" +
+          "Partidas jugadas: " + partidasJugadas + "\n" +
+          "Partidas ganadas: " + partidasGanadas + "\n" +
+          "Asesinatos: " + asesinatos + "\n" +
+          "Muertes: " + muertes;
+
+        alert(mensaje);
+        
       } else {
         console.log("Jugador no encontrado.");
       }

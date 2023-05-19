@@ -1,57 +1,40 @@
-function leerArchivoXML(archivo) {
-  const xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState === 4 && this.status === 200) {
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(this.responseText, 'text/xml');
+// Solicitar al usuario el ID del jugador
+const playerId = prompt("Ingresa el ID del jugador:");
 
-      const usuarios = xmlDoc.getElementsByTagName('usuario');
+// URL del archivo XML
+const xmlUrl = "../proyecto.xml";
 
-      for (let i = 0; i < usuarios.length; i++) {
-        const usuario = usuarios[i];
-        const nombre = usuario.getAttribute('nombre');
-        const steamId = usuario.getAttribute('steam_id');
-        const estadisticas = usuario.getElementsByTagName('estadisticas')[0].attributes;
-        const rango = usuario.getElementsByTagName('rango')[0].attributes;
-        const armas = usuario.getElementsByTagName('arma');
+// Cargar el archivo XML utilizando fetch
+fetch(xmlUrl)
+  .then(response => response.text())
+  .then(xmlString => {
+    // Crear un objeto DOMParser
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
 
-        console.log('Nombre:', nombre);
-        console.log('Steam ID:', steamId);
-        console.log('Estadísticas:', obtenerAtributos(estadisticas));
-        console.log('Rango:', obtenerAtributos(rango));
-        console.log('Armas:', obtenerArmas(armas));
-        console.log('-----------------------------');
-      }
+    // Encontrar el jugador con el ID proporcionado
+    const jugador = xmlDoc.querySelector(`usuario[steam_id="${playerId}"]`);
+
+    if (jugador) {
+      // Obtener la información del jugador
+      const nombre = jugador.getAttribute("nombre");
+      const estadisticas = jugador.querySelector("estadisticas");
+      const partidasJugadas = estadisticas.getAttribute("partidas_jugadas");
+      const partidasGanadas = estadisticas.getAttribute("partidas_ganadas");
+      const asesinatos = estadisticas.getAttribute("asesinatos");
+      const muertes = estadisticas.getAttribute("muertes");
+
+      // Mostrar la información del jugador
+      console.log("Información del jugador:");
+      console.log(`Nombre: ${nombre}`);
+      console.log(`Partidas jugadas: ${partidasJugadas}`);
+      console.log(`Partidas ganadas: ${partidasGanadas}`);
+      console.log(`Asesinatos: ${asesinatos}`);
+      console.log(`Muertes: ${muertes}`);
+    } else {
+      console.log("Jugador no encontrado.");
     }
-  };
-  xhttp.open('GET', archivo, true);
-  xhttp.send();
-}
-
-function obtenerAtributos(nodo) {
-  const atributos = {};
-
-  for (let i = 0; i < nodo.length; i++) {
-    const atributo = nodo[i];
-    atributos[atributo.name] = atributo.value;
-  }
-
-  return atributos;
-}
-
-function obtenerArmas(nodos) {
-  const armas = [];
-
-  for (let i = 0; i < nodos.length; i++) {
-    const arma = nodos[i];
-    const nombre = arma.getAttribute('nombre');
-    const atributos = obtenerAtributos(arma.attributes);
-    armas.push({ nombre, ...atributos });
-  }
-
-  return armas;
-}
-
-// Uso de la función
-leerArchivoXML('./proyecto.xml');
-
+  })
+  .catch(error => {
+    console.log("Ocurrió un error al cargar el archivo XML:", error);
+  });

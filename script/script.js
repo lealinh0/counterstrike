@@ -40,9 +40,9 @@ function ejecutar(){
           "Muertes: " + muertes;
 
         alert(mensaje);
-        
+
       } else {
-        console.log("Jugador no encontrado.");
+        alert("Jugador no encontrado.");
       }
     })
     .catch(error => {

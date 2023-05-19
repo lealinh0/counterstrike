@@ -2,7 +2,7 @@
 const playerId = prompt("Ingresa el ID del jugador:");
 
 // URL del archivo XML
-const xmlUrl = "../proyecto.xml";
+const xmlUrl = "https://lealinh0.github.io/counterstrike/proyecto.xml";
 
 // Cargar el archivo XML utilizando fetch
 fetch(xmlUrl)
